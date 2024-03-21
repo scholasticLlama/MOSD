@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-native-app-intro-slider": "^4.0.4",
+    "react-navigation": "^5.0.0"
+  }
+}

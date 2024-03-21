@@ -1,21 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import DisplayMainScreen from './components/MainScreen';
 
 export default function App() {
+  const [currentServer, setCurrentServer] = useState('Milan');
+  const server = { country: "Italy", city: "Milan", ipAddress: "155.20.11.01", timeRunning: "00:01:22" };
   return (
-    <View style={styles.container}>
-      <Text>Кожемяко Ярослава</Text>
-      <Text>nibiru.crs@gmail.com</Text>
-      <StatusBar style="auto" />
-    </View>
+    <DisplayMainScreen server={server}/>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
