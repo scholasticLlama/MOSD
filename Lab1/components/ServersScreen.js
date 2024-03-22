@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingTop: StatusBar.currentHeight,
   },
   header: {
     height: 60,

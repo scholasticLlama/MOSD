@@ -11,9 +11,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    marginTop: 10,
+    paddingTop: 10,
     paddingBottom: 50,
-    paddingTop: StatusBar.currentHeight,
   },
   header: {
     display: 'flex',
@@ -134,7 +133,7 @@ const DisplayMainScreen = (props) => {
   ];
  
   const navigationView = () => (
-    <View style={[styles.container, {justifyContent: 'flex-start'}]}>
+    <View style={[styles.container, {justifyContent: 'flex-start', paddingTop: 0}]}>
       <View style={styles.headerAdds}>
         <TouchableOpacity style={styles.goBack} onPress={() => drawer.current.closeDrawer()}>
           <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
