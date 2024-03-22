@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Image, View, TouchableOpacity } from 'react-native';
-import DisplayScreenMenu from './components/Menu';
+import * as RootNavigation from './RootNavigation';
 
 
 const styles = StyleSheet.create({
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    height: 50,
+    height: 60,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -21,18 +21,18 @@ const styles = StyleSheet.create({
     marginTop: 34,
     gap: 10,
     color: '#FFF',
-    backgroundColor: '#C8C926'
+    backgroundColor: '#adc926'
   },
   categoryRow: {
     width: '90%',
-    paddingHorizontal: 10,
-    marginTop: 10,
-    paddingBottom: 5,
+    paddingHorizontal: 25,
+    paddingVertical: 20,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: '#88891a'
+    borderBottomColor: '#f0f6d1'
   }
 });
 
@@ -41,7 +41,7 @@ function CategoryRow({ categoryName, value}){
   return (
     <View style={styles.categoryRow}>
       <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
-      <Text>{value}</Text>
+      <Text style={{fontSize: 15}}>{value}</Text>
     </View>
   );
 }
@@ -54,12 +54,12 @@ function ExitCategoryRow({ categoryName}){
   );
 }
 
-export default function App() {
+const DisplayScreenMenuAccount = () => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBack}>
-            <Text style={{fontSize: 20}}> {'<'} </Text>
+          <TouchableOpacity style={styles.goBack} onPress={() => RootNavigation.navigate('Menu')}>
+            <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
           </TouchableOpacity>
           <Text style={{fontSize: 20, color: '#fff'}}> My account </Text>
         </View>
@@ -69,3 +69,5 @@ export default function App() {
     </View>
   );
 }
+
+export default DisplayScreenMenuAccount;

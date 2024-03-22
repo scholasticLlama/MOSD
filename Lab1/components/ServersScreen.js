@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text, TextInput, Image, View, TouchableOpacity } from 'react-native';
-
+import * as RootNavigation from './RootNavigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -86,11 +86,14 @@ function ServerTable({ servers, filterText, currentServer, setCurrentServer }) {
 
 function ServerRow({ server, currentServer, setCurrentServer }){
   return (
-    <TouchableOpacity style={styles.countryRow} onPress={() => setCurrentServer(server.city)}>
+    <TouchableOpacity style={styles.countryRow} onPress={() => {
+      setCurrentServer(server);
+      RootNavigation.navigate('Main')
+      }}>
       <Image style={styles.image} source={server.flagPath}/>
       <View style={styles.text}>
-        <Text style={{ color: currentServer === server.city ? '#adc926': '#000', fontSize: 15, fontWeight: 'bold' }} >{server.country}</Text>
-        <Text style={{ color: currentServer === server.city ? '#adc926': '#000' }}>{server.city}</Text>
+        <Text style={{ color: currentServer.city === server.city ? '#adc926': '#000', fontSize: 15, fontWeight: 'bold' }} >{server.country}</Text>
+        <Text style={{ color: currentServer.city === server.city ? '#adc926': '#000' }}>{server.city}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -98,25 +101,25 @@ function ServerRow({ server, currentServer, setCurrentServer }){
 
 const DisplayScreenServer = (props) => {
   const availableServers = [
-    { country: "France", city: "Marseille", flagPath: require('../assets/images/flags/France.png'), isChosen: false },
-    { country: "Germany", city: "Frankfurt", flagPath: require('../assets/images/flags/Germany.png'), isChosen: false },
-    { country: "Great Britain", city: "London", flagPath: require('../assets/images/flags/Great Britain.png'), isChosen: false },
-    { country: "Great Britain", city: "London 1", flagPath: require('../assets/images/flags/Great Britain.png'), isChosen: false },
-    { country: "Israel", city: "Jerusalem", flagPath: require('../assets/images/flags/Israel.png'), isChosen: false },
-    { country: "Italy", city: "Milan", flagPath: require('../assets/images/flags/Italy.png'), isChosen: false },
-    { country: "Japan", city: "Tokyo", flagPath: require('../assets/images/flags/Japan.png'), isChosen: false },
-    { country: "Spain", city: "Madrid", flagPath: require('../assets/images/flags/Spain.png'), isChosen: false },
-    { country: "USA", city: "Chicago", flagPath: require('../assets/images/flags/USA.png'), isChosen: false },
-    { country: "USA", city: "Las Vegas", flagPath: require('../assets/images/flags/USA.png'), isChosen: false },
-    { country: "USA", city: "Seattle", flagPath: require('../assets/images/flags/USA.png'), isChosen: false }
+    { country: "France", city: "Marseille", flag: '🇫🇷', flagPath: require('../assets/images/flags/France.png'), isChosen: false },
+    { country: "Germany", city: "Frankfurt", flag: '🇩🇪', flagPath: require('../assets/images/flags/Germany.png'), isChosen: false },
+    { country: "Great Britain", city: "London", flag: '🇬🇧', flagPath: require('../assets/images/flags/Great Britain.png'), isChosen: false },
+    { country: "Great Britain", city: "London 1", flag: '🇬🇧', flagPath: require('../assets/images/flags/Great Britain.png'), isChosen: false },
+    { country: "Israel", city: "Jerusalem", flag: '🇮🇱', flagPath: require('../assets/images/flags/Israel.png'), isChosen: false },
+    { country: "Italy", city: "Milan", flag: '🇮🇹', flagPath: require('../assets/images/flags/Italy.png'), isChosen: false },
+    { country: "Japan", city: "Tokyo", flag: '🇯🇵', flagPath: require('../assets/images/flags/Japan.png'), isChosen: false },
+    { country: "Spain", city: "Madrid", flag: '🇪🇸', flagPath: require('../assets/images/flags/Spain.png'), isChosen: false },
+    { country: "USA", city: "Chicago", flag: '🇺🇸', flagPath: require('../assets/images/flags/USA.png'), isChosen: false },
+    { country: "USA", city: "Las Vegas", flag: '🇺🇸', flagPath: require('../assets/images/flags/USA.png'), isChosen: false },
+    { country: "USA", city: "Seattle", flag: '🇺🇸', flagPath: require('../assets/images/flags/USA.png'), isChosen: false }
   ];
   const [filterText, setFilterText] = useState('');
 
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBack}>
-            <Text style={{fontSize: 20}}> {'<'} </Text>
+          <TouchableOpacity style={styles.goBack} onPress={() => RootNavigation.navigate('Main')}>
+            <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
           </TouchableOpacity>
           <Text style={{fontSize: 21, color: '#fff'}}> Servers </Text>
         </View>

@@ -11,9 +11,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 400,
     resizeMode: 'stretch',
-    borderWidth: 7,
-    borderRadius: 150,
-    borderColor: '#C8C926'
+    marginBottom: 20,
   },
 
   gifHandler: {
@@ -27,10 +25,10 @@ const styles = StyleSheet.create({
 const DisplayAnImageWithStyle = (props) => {
   return (
     <View style={styles.container}>
-      <View style = {(props.type == "gifHandler") ? {} :{borderColor: '#000', borderWidth: 2, borderRadius:157, marginBottom: 20}}>
+      <View>
       <Image style={(props.type == "gifHandler") ? styles.gifHandler : styles.imageHandler} source={props.imagePath}/>
       </View>
-      <Text>{props.imageName}</Text>
+      <Text style={(props.type == "gifHandler") ? {} : { textAlign: 'center', fontSize: 20, fontStyle: 'italic', color: '#adc926' }}>{props.imageName}</Text>
     </View>
   );
 };

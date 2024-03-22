@@ -1,6 +1,7 @@
-import React, {useRef} from 'react';
-import { StyleSheet, SafeAreaView, StatusBar, Text, Image, View, TouchableOpacity, Button, DrawerLayoutAndroid } from 'react-native';
+import React, {useRef, useState } from 'react';
+import { StyleSheet, SafeAreaView, StatusBar, Text, Image, View, TouchableOpacity, DrawerLayoutAndroid } from 'react-native';
 import DisplayAnImageWithStyle from './Image';
+import * as RootNavigation from './RootNavigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#fff',
     marginTop: 10,
-    marginBottom: 50,
+    paddingBottom: 50,
     paddingTop: StatusBar.currentHeight,
   },
   header: {
@@ -125,13 +126,18 @@ function CategoryRow({ categoryName, value}){
 const DisplayMainScreen = (props) => {
   const drawer = useRef(null);
   const drawerPosition = 'right';
-  const server = props.server;
+  const server = (props.isRunning) ? props.server : {};
+
+  const contentElems = [
+    {image: require('../assets/images/frogW.gif'), imageName: "Not connected", textBtn: "Leap!" },
+    {image: require('../assets/images/frogC.gif'), imageName: "Connected", textBtn: "Stop leaping" },
+  ];
  
   const navigationView = () => (
     <View style={[styles.container, {justifyContent: 'flex-start'}]}>
       <View style={styles.headerAdds}>
         <TouchableOpacity style={styles.goBack} onPress={() => drawer.current.closeDrawer()}>
-          <Text style={{fontSize: 20}}> {'<'} </Text>
+          <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
         </TouchableOpacity>
         <Text style={{fontSize: 21, color: '#fff'}}> Connection info </Text>
       </View>
@@ -145,13 +151,22 @@ const DisplayMainScreen = (props) => {
           <CategoryRow categoryName="Country" value={server.country} />
           <CategoryRow categoryName="City" value={server.city} />
           <CategoryRow categoryName="IP-address" value={server.ipAddress} />
-          <CategoryRow categoryName="Time of running" value={server.timeRunning} />
+          <CategoryRow categoryName="Time of running" value="00:00:01" />
         </>
       )}
       
 
     </View>
   );
+  
+  function connectingButton(){
+    if (!props.isRunning){
+      props.setRunning(1);
+      
+    } else {
+      props.setRunning(0);
+    }
+  }
 
   return (
     <DrawerLayoutAndroid
@@ -162,7 +177,7 @@ const DisplayMainScreen = (props) => {
 
       <SafeAreaView style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => openMenu()}>
+            <TouchableOpacity onPress={() => RootNavigation.navigate('Menu')}>
             <Image style={{width: 40, height: 40}} source={require('../assets/images/Settings.png')}/>
             </TouchableOpacity>
 
@@ -176,17 +191,17 @@ const DisplayMainScreen = (props) => {
               </TouchableOpacity>
             </View>
         </View>
-        <DisplayAnImageWithStyle imagePath={require('../assets/images/frogC.gif')} imageName="Connecting..." type="gifHandler"/>
+        <DisplayAnImageWithStyle imagePath={contentElems[props.isRunning].image} imageName={contentElems[props.isRunning].imageName} type="gifHandler"/>
         
         <View style={styles.bottom}>
-        <TouchableOpacity style={styles.server} onPress={() => viewRegions()}>
-          <Text>Server: ITALY, ROME 🇮🇹</Text>
+        <TouchableOpacity style={styles.server} onPress={() => RootNavigation.navigate('Server')}>
+          <Text>Server: {props.server.country.toUpperCase()}, {props.server.city.toUpperCase()} {props.server.flag}</Text>
           <Text>{'>'}</Text>
         </TouchableOpacity>
 
         
-        <TouchableOpacity style={styles.connecting} onPress={() => connectingButton()}>
-          <Text>Still leaping...</Text>
+        <TouchableOpacity style={[styles.connecting, {backgroundColor: (props.isRunning) ? '#000' : '#fff'}]} onPress={connectingButton}>
+          <Text style={{color: (!props.isRunning) ? '#000' : '#fff'}}>{contentElems[props.isRunning].textBtn}</Text>
         </TouchableOpacity>
         </View>
     </SafeAreaView>

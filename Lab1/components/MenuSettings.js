@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, Switch, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Switch, View, Image, TouchableOpacity } from 'react-native';
+import * as RootNavigation from './RootNavigation';
 
 
 const styles = StyleSheet.create({
@@ -97,28 +98,21 @@ function SwitchRow({ categoryName, categoryDescription, isEnabled, setIsEnabled 
   );
 }
 
-const DisplayScreenMenuSettings = () => {
-  const [connectionType, setConnectionType] = useState("OpenVPN(TCP)");
-  const [obfuscationType, setObfuscationType] = useState("Chameleon");
-  const [encriptionType, setEncriptionType] = useState("Auto");
-
-  const [isEnabled_IPv6, setIsEnabled_IPv6] = useState(false);
-
-
+const DisplayScreenMenuSettings = (props) => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBack}>
-            <Text style={{fontSize: 20}}> {'<'} </Text>
+          <TouchableOpacity style={styles.goBack} onPress={() => RootNavigation.navigate('Menu')}>
+            <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
           </TouchableOpacity>
-          <Text style={{fontSize: 21, color: '#fff'}}> Settings </Text>
+          <Text style={{fontSize: 21, color: '#fff'}}> Additional features </Text>
         </View>
 
-      <CategoryRow categoryName="Connection mode" values={['OpenVPN(TCP)', 'OpenVPN(UPD)', 'IKEv2']} setFunction={setConnectionType} currentValue={connectionType}/>
-      <CategoryRow categoryName="Obfuscation type" values={['Chameleon', 'Basic']} setFunction={setObfuscationType} currentValue={obfuscationType}/>
-      <CategoryRow categoryName="Encription type" values={['Auto', 'AES-128-GCM', 'BF-CBC']} setFunction={setEncriptionType} currentValue={encriptionType}/>
+      <CategoryRow categoryName="Connection mode" values={['OpenVPN(TCP)', 'OpenVPN(UPD)', 'IKEv2']} setFunction={props.setConnectionType} currentValue={props.connectionType}/>
+      <CategoryRow categoryName="Obfuscation type" values={['Chameleon', 'Basic']} setFunction={props.setObfuscationType} currentValue={props.obfuscationType}/>
+      <CategoryRow categoryName="Encription type" values={['Auto', 'AES-128-GCM', 'BF-CBC']} setFunction={props.setEncriptionType} currentValue={props.encriptionType}/>
     
-      <SwitchRow categoryName="Bypassing VPN" categoryDescription="Block IPv6" isEnabled={isEnabled_IPv6} setIsEnabled={setIsEnabled_IPv6}/>
+      <SwitchRow categoryName="Bypassing VPN" categoryDescription="Block IPv6" isEnabled={props.isEnabled_IPv6} setIsEnabled={props.setIsEnabled_IPv6}/>
     
     </View>
   );

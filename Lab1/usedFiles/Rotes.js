@@ -4,7 +4,6 @@ import DisplayScreenMenuAccount from './components/MenuAccount';
 import DisplayScreenMenuSettings from './components/MenuSettings';
 import DisplayMainScreen from './components/MainScreen';
 import DisplayScreenServer from './components/ServersScreen';
-import DisplayScreenOnBoard from './components/ScreenOnBoard';
 import { navigationRef } from './components/RootNavigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -30,13 +29,13 @@ export default function App() {
     );
   };
 
-  const [isRunning, setRunning] = useState(0);
+  
   const server = { country: "Italy", city: "Milan", flag: '🇮🇹', ipAddress: "155.20.11.01", timeRunning: "00:01:22" };
   const [currentServer, setCurrentServer] = useState(server);
 
   const MainScreenComponent = () => {
     return (
-      <DisplayMainScreen server={currentServer} isRunning={isRunning} setRunning={setRunning}/>
+      <DisplayMainScreen server={currentServer}/>
     );
   };
 
@@ -46,26 +45,15 @@ export default function App() {
     );
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const ScreenOnBoardComponent = () => {
-    console.log(currentPage);
-    return (
-      <DisplayScreenOnBoard currentPage={currentPage} setCurrentPage={setCurrentPage} />
-    );
-  };
-
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
-      {currentPage <= 2 ? (
-          <Stack.Screen name="OnBoard" component={ScreenOnBoardComponent} options={{headerShown: false}}/>
-      ) : null}
-        <Stack.Screen name="Main" component={MainScreenComponent} options={{headerShown: false}}/>
-        <Stack.Screen name="Server" component={ServerScreenComponent} options={{headerShown: false}}/>
         <Stack.Screen name="Menu" component={DisplayScreenMenu} options={{headerShown: false}}/>
         <Stack.Screen name="Account" component={DisplayScreenMenuAccount} options={{headerShown: false}}/>
-        <Stack.Screen name="Settings" component={SettingsScreenComponent} options={{headerShown: false}}/>
+        <Stack.Screen name="Settings" component={SettingsScreenComponent} options={{headerShown: false}}
+        />
+        <Stack.Screen name="Main" component={MainScreenComponent} options={{headerShown: false}} />
+        <Stack.Screen name="Server" component={ServerScreenComponent} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

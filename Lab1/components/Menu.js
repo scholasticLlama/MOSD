@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Image, View, TouchableOpacity, BackHandler } from 'react-native';
+import * as RootNavigation from './RootNavigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    height: 50,
+    height: 60,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -19,32 +20,32 @@ const styles = StyleSheet.create({
     marginTop: 34,
     gap: 10,
     color: '#FFF',
-    backgroundColor: '#C8C926'
+    backgroundColor: '#adc926'
   },
   categoryRow: {
-    width: '100%',
+    width: '95%',
     paddingHorizontal: 15,
-    marginTop: 10,
-    paddingBottom: 5,
+    paddingVertical: 10,
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'row', 
+    alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: '#88891a'
+    borderBottomColor: '#f0f6d1'
   }
 
 });
 
 
 
-function CategoryRow({ categoryName, categoryDescription}){
+function CategoryRow({ categoryName, categoryDescription, screen }){
   return (
     <View style={styles.categoryRow}>
       <View style={styles.categotyText}>
         <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
         <Text style={{color: '#808080'}}>{categoryDescription}</Text>
       </View>
-      <TouchableOpacity style={styles.goForward}>
+      <TouchableOpacity style={styles.goForward} onPress={() => RootNavigation.navigate(screen)}>
         <Text style={{fontSize: 20}}> {'>'} </Text>
       </TouchableOpacity>
     </View>
@@ -67,14 +68,14 @@ const DisplayScreenMenu = () => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBack}>
-            <Text style={{fontSize: 20}}> {'<'} </Text>
+          <TouchableOpacity style={styles.goBack} onPress={() => RootNavigation.navigate('Main')} >
+            <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
           </TouchableOpacity>
           <Text style={{fontSize: 20, color: '#fff'}}> Settings </Text>
         </View>
-        <CategoryRow categoryName="My account" categoryDescription="more info, log out" />
-        <CategoryRow categoryName="Additional features" categoryDescription="more info & more" />
-        <ExitCategoryRow categoryName="Exit" categoryDescription="close app" />
+        <CategoryRow categoryName="My account" categoryDescription="Get user info, log out" screen='Account'/>
+        <CategoryRow categoryName="Additional features" categoryDescription="Connection types" screen='Settings' />
+        <ExitCategoryRow categoryName="Exit" categoryDescription="Turn off app" />
     </View>
   );
 }
