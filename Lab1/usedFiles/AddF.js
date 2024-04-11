@@ -1,9 +1,7 @@
-import React, {useRef, useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, StatusBar, Text, Image, View, TouchableOpacity, DrawerLayoutAndroid } from 'react-native';
+import React, {useRef, useState } from 'react';
+import { StyleSheet, SafeAreaView, Animated, Text, Image, View, TouchableOpacity, DrawerLayoutAndroid } from 'react-native';
 import DisplayAnImageWithStyle from './Image';
 import * as RootNavigation from './RootNavigation';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +20,29 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     width: '100%',
+  },
+  description: {
+    paddingHorizontal: 40,
+    marginBottom: 10,
+    textAlign: 'center',
+    
+  },
+  writeTaskWrapper : {
+    marginBottom: 50,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: "space-around",
+    alignItems: 'center'
+  },
+  addWrapper : {
+    width: 60,
+    height: 60,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 60,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
   },
   server:{
     display: 'flex',
@@ -92,14 +113,6 @@ const styles = StyleSheet.create({
   }
 });
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
 function generateIPAddress() {
   const octet1 = Math.floor(Math.random() * 256);
   const octet2 = Math.floor(Math.random() * 256);
@@ -122,68 +135,37 @@ const DisplayMainScreen = (props) => {
   const drawer = useRef(null);
   const drawerPosition = 'right';
   const server = (props.isRunning) ? props.server : {};
+  const [currentIP, setCurrentIP] = useState(generateIPAddress());
+  const [animation] = useState(new Animated.Value(100));
 
   const contentElems = [
     {image: require('../assets/images/frogW.gif'), imageName: "Not connected", textBtn: "Leap!" },
     {image: require('../assets/images/frogC.gif'), imageName: "Connected", textBtn: "Stop leaping" },
   ];
 
-  const [currentIP, setCurrentIP] = useState(generateIPAddress());
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const increaseWidth = () => {
+    Animated.timing(animation, {
+      toValue: 200,
+      duration: 2000,
+      useNativeDriver: false
+    }).start();
+  };
 
-  useEffect(() => {
-    console.log("Reg for push notif");
-    registerForPushNotificationsAsync().then(token => {
-      
-      setExpoPushToken(token);
-    })
-    .catch(err => console.log(err));
-  }, []);
+  const decreaseWidth = () => {
+    Animated.timing(animation, {
+      toValue: 50,
+      duration: 500,
+      useNativeDriver: false
+    }).start();
+  };
 
-  
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync({
-        projectId: '4b659538-b929-46e9-9468-ad6a134937f5' })).data;
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-    return token;
-  }
+  const animatedStyle = {
+    width: animation,
+    height: 50,
+    backgroundColor: 'green'
+  };
 
-  const sendNotification = async() => {
-    const message = {
-      to: expoPushToken,
-      sound: "default",
-      expiration: 0,
-      title: "Froggy Voyage 🐸",
-      body: `Connected to ${props.server.city}, ${props.server.country}.`
 
-    }
-
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: 'POST',
-      headers: {
-        host: "exp.host",
-        accept: "application/json",
-        "accept-encoding": "gzip, deflate",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(message),
-    })
-  }
- 
   const navigationView = () => (
     <View style={[styles.container, {justifyContent: 'flex-start', paddingTop: 0}]}>
       <View style={styles.headerAdds}>
@@ -209,12 +191,15 @@ const DisplayMainScreen = (props) => {
     </View>
   );
   
-  function connectingButton(){
+  const connectingButton = () => {
+    increaseWidth();
+    addServer
+  }
+
+  function addServer(){
     if (!props.isRunning){
       setCurrentIP(generateIPAddress());
-      sendNotification();
       props.setRunning(1);
-      
     } else {
       props.setRunning(0);
     }
@@ -256,6 +241,16 @@ const DisplayMainScreen = (props) => {
           <Text style={{color: (!props.isRunning) ? '#000' : '#fff'}}>{contentElems[props.isRunning].textBtn}</Text>
         </TouchableOpacity>
         </View>
+
+        <View style={{ width: 400, justifyContent: 'flex-start'  }}>
+        <Animated.View style={animatedStyle}></Animated.View>
+      </View>
+      <TouchableOpacity onPress={increaseWidth}>
+        <Text>Increase Width</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={decreaseWidth}>
+        <Text>Decrease Width</Text>
+      </TouchableOpacity>
     </SafeAreaView>
     </DrawerLayoutAndroid>
   );

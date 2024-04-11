@@ -72,17 +72,16 @@ const DisplayScreenOnBoard = (props) => {
     function handleGoBack(){
       if (props.currentPage >= 2)
         props.setCurrentPage(props.currentPage - 1)
-      if (props.currentPage == 1)
+      if (props.currentPage == 1){
         RootNavigation.navigate('Main')
-        props.setCurrentPage(props.currentPage + 2)
+        props.setCurrentPage(props.currentPage + 3)
+      }        
     }
 
     function handleGoForward(){
-      if (props.currentPage <= 2)
-        props.setCurrentPage(props.currentPage + 1)
-      else
+      if (props.currentPage > 2)
         RootNavigation.navigate('Main')
-        props.setCurrentPage(props.currentPage + 1)
+      props.setCurrentPage(props.currentPage + 1)
     }
 
     

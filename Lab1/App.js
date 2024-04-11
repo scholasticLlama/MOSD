@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import DisplayScreenMenu from './components/Menu';
 import DisplayScreenMenuAccount from './components/MenuAccount';
 import DisplayScreenMenuSettings from './components/MenuSettings';
@@ -33,10 +33,13 @@ export default function App() {
   const [isRunning, setRunning] = useState(0);
   const server = { country: "Italy", city: "Milan", flag: '🇮🇹', ipAddress: "155.20.11.01", timeRunning: "00:01:22" };
   const [currentServer, setCurrentServer] = useState(server);
+  const [timer, setTimer] =useState(0);
+  
 
   const MainScreenComponent = () => {
     return (
-      <DisplayMainScreen server={currentServer} isRunning={isRunning} setRunning={setRunning}/>
+      <DisplayMainScreen server={currentServer} isRunning={isRunning} setRunning={setRunning}
+      timer={timer} setTimer={setTimer}/>
     );
   };
 
@@ -58,7 +61,7 @@ export default function App() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
-      {currentPage <= 2 ? (
+      {currentPage <= 3 ? (
           <Stack.Screen name="OnBoard" component={ScreenOnBoardComponent} options={{headerShown: false}}/>
       ) : null}
         <Stack.Screen name="Main" component={MainScreenComponent} options={{headerShown: false}}/>

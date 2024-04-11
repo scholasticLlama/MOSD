@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 
-function CategoryRow({ categoryName, value}){
+function InfoRow({ categoryName, value}){
   return (
     <View style={styles.categoryRow}>
       <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
@@ -45,7 +45,7 @@ function CategoryRow({ categoryName, value}){
   );
 }
 
-function ExitCategoryRow({ categoryName}){
+function LogOutRow({ categoryName}){
   return (
     <TouchableOpacity style={styles.categoryRow}>
       <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
@@ -63,8 +63,8 @@ const DisplayScreenMenuAccount = () => {
           <Text style={{fontSize: 20, color: '#fff'}}> My account </Text>
         </View>
 
-        <CategoryRow categoryName="User ID" value="256398" />
-        <ExitCategoryRow categoryName="Log out" />
+        <InfoRow categoryName="User ID" value="256398" />
+        <LogOutRow categoryName="Log out" />
     </View>
   );
 }

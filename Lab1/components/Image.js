@@ -19,6 +19,13 @@ const styles = StyleSheet.create({
     height: 300,
     resizeMode: 'stretch',
     marginBottom: 20,
+  },
+
+  imageText: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontStyle: 'italic',
+    color: '#adc926'
   }
 });
 
@@ -28,7 +35,7 @@ const DisplayAnImageWithStyle = (props) => {
       <View>
       <Image style={(props.type == "gifHandler") ? styles.gifHandler : styles.imageHandler} source={props.imagePath}/>
       </View>
-      <Text style={(props.type == "gifHandler") ? {} : { textAlign: 'center', fontSize: 20, fontStyle: 'italic', color: '#adc926' }}>{props.imageName}</Text>
+      <Text style={(props.type == "gifHandler") ? {} : styles.imageText}>{props.imageName}</Text>
     </View>
   );
 };

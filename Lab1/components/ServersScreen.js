@@ -57,7 +57,7 @@ function SearchBar({ filterText, onFilterTextChange }) {
       <TextInput 
         style={{ width: '90%' }}
         value={filterText} 
-        placeholder="Search..." 
+        placeholder="Search..."
         onChangeText={(text) => onFilterTextChange(text)} />
         <TouchableOpacity style={{ width: '15%', justifyContent: 'center', alignItems: 'center'}} onPress={() => onFilterTextChange('')}>
         <Image style={{width: 30, height: 30 }} source={require('../assets/images/close1.png')}/>
