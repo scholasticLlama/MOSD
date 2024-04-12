@@ -4,6 +4,8 @@ import DisplayAnImageWithStyle from './Image';
 import * as RootNavigation from './RootNavigation';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { auth, db } from '../firebase';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 const styles = StyleSheet.create({
   container: {
@@ -118,6 +120,7 @@ function CategoryRow({ categoryName, value}){
   );
 }
 
+
 const DisplayMainScreen = (props) => {
   const drawer = useRef(null);
   const drawerPosition = 'right';
@@ -208,11 +211,33 @@ const DisplayMainScreen = (props) => {
 
     </View>
   );
+
+  const addData = async ({ city }) => {
+    const docRef = doc(db, "usersHistory", auth.currentUser?.email);
+    const docSnap = await getDoc(docRef);
+    const info = docSnap.data();
+  
+    console.log('new value ', city)
+    
+    
+    if (docSnap.exists() && info.hasOwnProperty(city)) {
+      updateDoc(docRef, {
+        [city]: info[city] + 1
+      });
+    } else {
+      setDoc(docRef, {
+        ...info,
+        [city]: 1
+      });
+    }
+    
+  }
   
   function connectingButton(){
     if (!props.isRunning){
       setCurrentIP(generateIPAddress());
       sendNotification();
+      addData({ city: props.server.city });
       props.setRunning(1);
       
     } else {

@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Image, View, TouchableOpacity } from 'react-native';
-import * as RootNavigation from './RootNavigation';
+import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView } from 'react-native';
+import { auth, db } from '../firebase';
+import { useNavigation } from '@react-navigation/core'
+import { doc, getDoc } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
 
 
 const styles = StyleSheet.create({
@@ -22,8 +25,31 @@ const styles = StyleSheet.create({
     color: '#FFF',
     backgroundColor: '#adc926'
   },
+  categoryContainer: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  categoryName: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    color: '#cecece',
+    backgroundColor: '#f0f6d1'
+  },
   categoryRow: {
-    width: '90%',
+    width: '95%',
+    paddingHorizontal: 25,
+    paddingVertical: 18,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f6d1'
+  },
+  userInfoRow: {
+    width: '95%',
     paddingHorizontal: 25,
     paddingVertical: 20,
     display: 'flex',
@@ -36,35 +62,94 @@ const styles = StyleSheet.create({
 });
 
 
-function InfoRow({ categoryName, value}){
-  return (
-    <View style={styles.categoryRow}>
-      <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
-      <Text style={{fontSize: 15}}>{value}</Text>
-    </View>
-  );
+const readData = async () => {
+  try {
+    const docRef = doc(db, "usersHistory", auth.currentUser?.email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const info = docSnap.data();
+      return info;
+    }
+    
+  } catch(e){
+    alert(e)
+    return null;
+  }
 }
 
-function LogOutRow({ categoryName}){
+function CategoryRow({ info }){
+  const sortedKeys = Object.keys(info).sort();
+  sortedKeys.map((fieldName) =>
+  console.log(`Value for key '${fieldName}':`, info[fieldName]))
+  
   return (
-    <TouchableOpacity style={styles.categoryRow}>
-      <Text style={{fontSize: 15, fontWeight: 'bold'}}>{categoryName}</Text>
-    </TouchableOpacity>
+    <ScrollView contentContainerStyle={{ alignItems: 'center' }} style={{ width:'100%' }}>
+      {sortedKeys.map(city => (
+          <View key={city} style={styles.categoryRow}>
+            <Text style={{fontSize: 15}}>{city}</Text>
+            <Text>{info[city]} time{info[city] > 1 ? 's' : ''}</Text>
+          </View>
+      ))}
+      </ScrollView>
   );
 }
 
 const DisplayScreenMenuAccount = () => {
+  const navigation = useNavigation();
+  const [data, setData] = useState([]);
+
+  const handleSingOut = () => {
+    auth.signOut().then(() => {
+      navigation.replace("Login")
+    })
+    .catch(error => console.log(error.message))
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await readData();
+        setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.goBack} onPress={() => RootNavigation.navigate('Menu')}>
+          <TouchableOpacity style={styles.goBack} onPress={() => navigation.goBack()}>
             <Image style={{width: 30, height: 30 }} source={require('../assets/images/goBack.png')}/>
           </TouchableOpacity>
           <Text style={{fontSize: 20, color: '#fff'}}> My account </Text>
         </View>
 
-        <InfoRow categoryName="User ID" value="256398" />
-        <LogOutRow categoryName="Log out" />
+        
+        <View style={styles.categoryContainer}>
+
+          <Text style={styles.categoryName}>Account Management</Text>
+
+          <View style={styles.userInfoRow}>
+            <Text style={{fontSize: 15, fontWeight: 'bold'}}>User email</Text>
+            <Text style={{fontSize: 15}}>{auth.currentUser?.email}</Text>
+          </View>
+
+          <TouchableOpacity style={styles.userInfoRow} onPress={handleSingOut}>
+            <Text style={{fontSize: 15, fontWeight: 'bold'}}>Log out</Text>
+          </TouchableOpacity>
+
+          {data != null && <Text style={styles.categoryName}>Connection history</Text>}
+
+        </View>
+
+        {data != null && <CategoryRow info={data} />}
+        
+      
+
     </View>
   );
 }

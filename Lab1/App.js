@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react';
 import DisplayScreenMenu from './components/Menu';
 import DisplayScreenMenuAccount from './components/MenuAccount';
 import DisplayScreenMenuSettings from './components/MenuSettings';
+import LoginScreen from './components/LoginScreen';
 import DisplayMainScreen from './components/MainScreen';
 import DisplayScreenServer from './components/ServersScreen';
 import DisplayScreenOnBoard from './components/ScreenOnBoard';
+
 import { navigationRef } from './components/RootNavigation';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -64,6 +66,7 @@ export default function App() {
       {currentPage <= 3 ? (
           <Stack.Screen name="OnBoard" component={ScreenOnBoardComponent} options={{headerShown: false}}/>
       ) : null}
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Main" component={MainScreenComponent} options={{headerShown: false}}/>
         <Stack.Screen name="Server" component={ServerScreenComponent} options={{headerShown: false}}/>
         <Stack.Screen name="Menu" component={DisplayScreenMenu} options={{headerShown: false}}/>

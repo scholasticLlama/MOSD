@@ -73,14 +73,14 @@ const DisplayScreenOnBoard = (props) => {
       if (props.currentPage >= 2)
         props.setCurrentPage(props.currentPage - 1)
       if (props.currentPage == 1){
-        RootNavigation.navigate('Main')
+        RootNavigation.navigate('Login')
         props.setCurrentPage(props.currentPage + 3)
       }        
     }
 
     function handleGoForward(){
       if (props.currentPage > 2)
-        RootNavigation.navigate('Main')
+        RootNavigation.navigate('Login')
       props.setCurrentPage(props.currentPage + 1)
     }
 
