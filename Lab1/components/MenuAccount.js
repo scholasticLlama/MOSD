@@ -142,11 +142,14 @@ const DisplayScreenMenuAccount = () => {
             <Text style={{fontSize: 15, fontWeight: 'bold'}}>Log out</Text>
           </TouchableOpacity>
 
-          {data != null && <Text style={styles.categoryName}>Connection history</Text>}
+          
 
         </View>
-
-        {data != null && <CategoryRow info={data} />}
+        {data != null &&
+        <>
+        <Text style={styles.categoryName}>Connection history</Text>
+        <CategoryRow info={data} />
+        </>}
         
       
 

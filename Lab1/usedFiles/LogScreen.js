@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/core'
 import { BackHandler } from 'react-native';
@@ -66,6 +64,7 @@ const LoginScreen = () => {
         }
       }
 
+
       if (error.code === 'auth/weak-password') {
         console.log('The password is too weak.');
         setPasswordError('The password is too weak.');
@@ -76,6 +75,7 @@ const LoginScreen = () => {
         setPasswordError('');
       }
 
+      alert(error.message);
       setLoginError('')
     })
   }
@@ -93,44 +93,39 @@ const LoginScreen = () => {
       setLoginError('Incorrect email or password.');
     })
   }
-
-  console.log("state = ", accountState, " error = ", emailError, " or ", passwordError);
+  console.log("2%2 = ", 2%2, "1%2 = ", 1%2);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>    
-        
-        <View style={styles.container}>
-          <Text style={styles.title}>froggy voyage</Text>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Text style={styles.title}>froggy voyage</Text>
       
-          <View style={styles.main}>
-            <View style={styles.inputContainer}>     
-              <Image style={styles.imageHandler} source={require('../assets/images/login.jpg')}/>
-              <Text style={styles.header}>{contentElems[accountState].headerText}</Text>
-
-              <TextInput placeholder="Email" value={email} onChangeText={text => setEmail(text)}
-                style={[styles.input, { borderColor: (emailError == '' && loginError == '') ? '#F5F5F5' : '#C11B17' }]} />
-              <Text style={styles.errorText}>{emailError}</Text>
-
-              <TextInput onChangeText={text => setPassword(text)} value={password} placeholder="Password" secureTextEntry
-                style={[styles.input, { borderColor: (passwordError == '' && loginError == '') ? '#F5F5F5' : '#C11B17' }]} />
-              <Text style={styles.errorText}>{passwordError}</Text>
-              <Text style={{ fontSize: 10, color: '#C11B17' }}>{loginError}</Text>
-            </View>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={accountState == 0 ? handleSignUp : handleLogin} style={contentElems[accountState].buttonStyle}>
-                <Text style={contentElems[accountState].textStyle}>{contentElems[accountState].buttonText}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => { setAccountState((accountState + 1) % 2); setPasswordError(''); setEmailError(''); setLoginError('') }} style={{ width: '100%' }}>
-                <Text style={styles.changeText}>{contentElems[accountState].changeText}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
+      <View style={styles.main}>
+        <View style={styles.inputContainer}>     
+          <Image style={styles.imageHandler} source={require('../assets/images/login.jpg')}/>
+          <Text style={styles.header}>{contentElems[accountState].headerText}</Text>
+          <TextInput placeholder="Email" value={email} onChangeText={text => setEmail(text)}
+            style={[styles.input, { borderColor: (emailError == '' && loginError == '') ? '#F5F5F5' : '#C11B17' }]} />
+          <Text style={{ fontSize: 10, color: '#C11B17', textAlign: 'left', width: '100%' }}>{emailError}</Text>
+          <TextInput onChangeText={text => setPassword(text)} value={password} placeholder="Password" secureTextEntry
+            style={[styles.input, { borderColor: (passwordError == '' && loginError == '') ? '#F5F5F5' : '#C11B17' }]} />
+          <Text style={{ fontSize: 10, color: '#C11B17', textAlign: 'left', width: '100%' }}>{passwordError}</Text>
+          <Text style={{ fontSize: 10, color: '#C11B17' }}>{loginError}</Text>
         </View>
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={accountState ? handleSignUp : handleLogin} style={contentElems[accountState].buttonStyle}>
+            <Text style={contentElems[accountState].textStyle}>{contentElems[accountState].buttonText}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setAccountState((accountState + 1) % 2)} style={{ width: '100%' }}>
+            <Text  
+            style={{ fontSize: 15, color: '#91a820', textAlign: 'right', width: '100%', marginTop: 10, textDecorationLine: 'underline' }}>
+              {contentElems[accountState].changeText}</Text>
+          </TouchableOpacity>
+
+          
+      </View>
+    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -182,8 +177,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '80%',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 0
+    alignItems: 'center'
   },
   button: {
     backgroundColor: '#000',
@@ -216,20 +210,6 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 0,
     marginTop: 30
-  },
-  errorText: { 
-    fontSize: 10,
-    color: '#C11B17',
-    textAlign: 'left',
-    width: '100%'
-  },
-  changeText: {
-    fontSize: 15,
-    color: '#91a820',
-    textAlign: 'right',
-    width: '100%',
-    marginTop: 10,
-    textDecorationLine: 'underline'
   }
 });
 
